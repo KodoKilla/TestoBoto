@@ -1,6 +1,5 @@
-# Fiz tudo no main pq sou bagaceiro #
-
 from nerodia.browser import Browser
+import time
 
 def basicSearch():
     # Retirado do Site do Nerodia, para teste inicial #
@@ -19,21 +18,34 @@ def iniciaBot():
 
     return browser
 
-def loginNovus(browser):
-    # Login no Sistema Novus #
+def loginInvalido(browser):
+    # Login Invalido no Sistema Novus #
     browser.goto('localhost/pages/Login.php')
 
     login = browser.text_field(name='user')
     login.value = 'admin'
     senha = browser.text_field(name='password')
+    senha.value = 'teste'
+    browser.button(name='submit').click()
+
+def loginNovus(browser, sleep):
+    # Login no Sistema Novus #
+    browser.goto('localhost/pages/Login.php')
+
+    login = browser.text_field(name='user')
+    login.value = 'admin'
+    time.sleep(sleep)
+    senha = browser.text_field(name='password')
     senha.value = 'admin'
+    time.sleep(sleep)
+    browser.wait()
     browser.button(name='submit').click()
 
 
-def insereUser(browser):
+def insereUser(browser, sleep):
     # Ir ate a tela de adicionar usuario #
     browser.goto('localhost/pages/UsuariosList.php')
-    browser.wait()
+    time.sleep(sleep)
     browser.link(value='Adicionar').click()
 
     # Adicionar um usuario de teste #
@@ -43,16 +55,28 @@ def insereUser(browser):
     senha = browser.text_field(id='senha')
 
     usuario.value = 'AutoBot'
-    nome.value = 'Bot de Teste'
+    time.sleep(sleep)
+    nome.value = 'Bot'
+    time.sleep(sleep)
     email.value = 'BotTestadorNovus@gmail.com'
+    time.sleep(sleep)
     senha.value = 'AutoBot'
 
+    time.sleep(sleep)
     browser.button(name='salvar').click()
 
+def apagaUser(browser, sleep):
+    browser.wait()
+    browser.goto('localhost/pages/UsuariosList.php')
+    time.sleep(sleep)
+    browser.link(id='Bot').click()
+    time.sleep(sleep)
+    browser.alert.ok()
 
 # 'Main' #
+sleep = 0
 browser = iniciaBot()
-loginNovus(browser)
-insereUser(browser)
-
-# Teste#
+#loginInvalido(browser)
+loginNovus(browser, sleep)
+insereUser(browser, sleep)
+apagaUser(browser, sleep)
